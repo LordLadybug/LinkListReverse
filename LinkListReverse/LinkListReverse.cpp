@@ -10,39 +10,57 @@ struct LinkNode {
     LinkNode* ToNextNode;
 };
 
+void ListReverser(LinkNode Node1, LinkNode Node2);
+
 int main()
 {
     std::cout << "Hello World!\n";
     //Defining a sample linked list to work with
     LinkNode Root;
-    Root.val = 1;
+    Root.val = 2;
+    LinkNode Also;
+    Also.val = 4;
+    Root.ToNextNode = &Also;
+    LinkNode Additionally;
+    Additionally.val = 6;
+    Also.ToNextNode = &Additionally;
+    LinkNode Moreover;
+    Moreover.val = 8;
+    Additionally.ToNextNode = &Moreover;
     LinkNode Next;
-    Next.val = 2;
-    Root.ToNextNode = &Next;
+    Next.val = 10;
+    Moreover.ToNextNode = &Next;
     LinkNode Last;
-    Last.val = 3;
+    Last.val = 12;
     Next.ToNextNode = &Last;
     Last.ToNextNode = NULL;
 
-    //Traverse once to get count of number of nodes
-    LinkNode CurrentNode = Root;
-    unsigned int NodeCounter = 0;
-    while (CurrentNode.ToNextNode != NULL)
+    //Generating the first pair of nodes to be plugged into our function:
+    LinkNode Node1 = Root;
+    LinkNode Node2;
+    if (Node1.ToNextNode != NULL)
     {
-        NodeCounter++;
-        CurrentNode = *CurrentNode.ToNextNode;
+        Node2 = *Node1.ToNextNode;  //Only does this if there is more than one node in the list
     }
-    std::cout << NodeCounter << std::endl;
-    
-    //Traverse through entire list to last node specified by NodeCounter, print val and then keep travelling to earlier members of list and keep printing
-    for (int i = NodeCounter; i >= 0; i--)
+    else
     {
-        CurrentNode = Root; //Reset value of CurrentNode to Root for next set of loops
-        for (int j = 0; j < i; j++)
-        {
-            CurrentNode = *CurrentNode.ToNextNode;
-        }
-        std::cout << CurrentNode.val << "\t";
+        std::cout << Node1.val; //in the event that the list has just one node, print it and exit the program
+        return 0;
+    }
+    ListReverser(Node1, Node2);
+}
+
+void ListReverser(LinkNode Node1, LinkNode Node2)
+{
+    if (Node2.ToNextNode == NULL)
+    {
+        std::cout << Node2.val << "\t" << Node1.val << "\t";
+        Node1.ToNextNode = NULL;
+    }
+    else
+    {
+        ListReverser(Node2, *Node2.ToNextNode);
+        std::cout << Node1.val << "\t";
     }
 }
 
