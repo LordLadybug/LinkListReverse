@@ -1,7 +1,7 @@
 // LinkListReverse.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 // One node equals a struct containing an integer named val and a pointer to the next node
-//Prints out reversed linked list
+//Reverses list in place
 
 #include <iostream>
 
@@ -10,58 +10,62 @@ struct LinkNode {
     LinkNode* ToNextNode;
 };
 
-void ListReverser(LinkNode Node1, LinkNode Node2);
+void ListReverser(LinkNode* Node1, LinkNode* Node2);
 
 int main()
 {
-    std::cout << "Hello World!\n";
     //Defining a sample linked list to work with
     LinkNode Root;
-    Root.val = 2;
+    Root.val = 1;
     LinkNode Also;
-    Also.val = 4;
+    Also.val = 2;
     Root.ToNextNode = &Also;
     LinkNode Additionally;
-    Additionally.val = 6;
+    Additionally.val = 3;
     Also.ToNextNode = &Additionally;
     LinkNode Moreover;
-    Moreover.val = 8;
+    Moreover.val = 4;
     Additionally.ToNextNode = &Moreover;
     LinkNode Next;
-    Next.val = 10;
+    Next.val = 5;
     Moreover.ToNextNode = &Next;
     LinkNode Last;
-    Last.val = 12;
+    Last.val = 6;
     Next.ToNextNode = &Last;
     Last.ToNextNode = NULL;
 
-    //Generating the first pair of nodes to be plugged into our function:
-    LinkNode Node1 = Root;
-    LinkNode Node2;
-    if (Node1.ToNextNode != NULL)
+    LinkNode* Node1 = &Root; //Uses pointer to Root so that it can be passed into function by reference
+    //Reversing the linked list
+    if (Root.ToNextNode == NULL)
     {
-        Node2 = *Node1.ToNextNode;  //Only does this if there is more than one node in the list
-    }
-    else
-    {
-        std::cout << Node1.val; //in the event that the list has just one node, print it and exit the program
+        std::cout << Root.val; //in the event that the list has just one node, print it and exit the program
         return 0;
     }
-    ListReverser(Node1, Node2);
-}
-
-void ListReverser(LinkNode Node1, LinkNode Node2)
-{
-    if (Node2.ToNextNode == NULL)
-    {
-        std::cout << Node2.val << "\t" << Node1.val << "\t";
-        Node1.ToNextNode = NULL;
-    }
     else
     {
-        ListReverser(Node2, *Node2.ToNextNode);
-        std::cout << Node1.val << "\t";
+        ListReverser(Node1, Node1->ToNextNode);
+        Root.ToNextNode = NULL; //after all other pointers are reversed, make sure root points to NULL
     }
+
+    //TESTING:
+    Node1 = &Last;  //used to print out the linked list when it is finally reversed
+    while (Node1->ToNextNode != NULL)
+    {
+        std::cout << Node1->val << "\t";
+        Node1 = Node1->ToNextNode;
+    }
+    std::cout << Node1->val << std::endl;   //prints out final member of now reversed linked list
+}
+
+void ListReverser(LinkNode* Node1, LinkNode* Node2)
+{
+    //takes a consecutive pair of nodes in the linked list, presumably starting with the root node
+    if (Node2->ToNextNode != NULL)
+    {
+        //to run when not on last pair of nodes
+        ListReverser(Node2, Node2->ToNextNode);
+    }
+        Node2->ToNextNode = Node1;
 }
 
 // Run program: Ctrl + F5 or Debug > Start Without Debugging menu
